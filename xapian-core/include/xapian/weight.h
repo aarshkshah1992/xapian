@@ -358,7 +358,7 @@ class XAPIAN_VISIBILITY_DEFAULT TfIdfWeight : public Weight {
     void init(double factor);
 
     /* When additional normalizations are implemented in the future, the additional statistics for them
-       should be accesed by these functions. */
+       should be accessed by these functions. */
     double get_wdfn(Xapian::termcount wdf, char c) const;
     double get_idfn(Xapian::doccount termfreq, char c) const;
     double get_wtn(double wt, char c) const;
@@ -379,7 +379,7 @@ class XAPIAN_VISIBILITY_DEFAULT TfIdfWeight : public Weight {
      *                         'S':Square     wdfn=wdf*wdf
      *                         'L':Logarithmic wdfn=1+log<sub>e</sub>(wdf)
      *
-     *                         The Max-wdf and Augmented Max wdf normalization aren't yet implemented.
+     *                         The Max-wdf and Augmented Max wdf normalizations aren't yet implemented.
      *
      *
      *                         The second character indicates the normalization
@@ -394,11 +394,11 @@ class XAPIAN_VISIBILITY_DEFAULT TfIdfWeight : public Weight {
      *
      *
      *                         The third and the final character indicates the
-     *                         normalizaton for the document weight of which
+     *                         normalization for the document weight of which
      *                         the following are currently available:
      *
      *                         'N':None wtn=tfn*idfn
-     *                         Implementing more normalizaions for the weight requires access to
+     *                         Implementing more normalizations for the weight requires access to
      *                         statistics such as the weight of all terms in the document indexed by
      *                         the term in the query. This is not available from the current backend.
      *
