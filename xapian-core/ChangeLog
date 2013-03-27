@@ -1,14 +1,14 @@
-Sun Mar 3 8:37 AM GMT 2013 Aarsh Shah <aarshkshah1992@gmail.com>
+Sun Mar 03 08:37:00 GMT 2013  Aarsh Shah <aarshkshah1992@gmail.com>
 
-        * weight/: Added tfidfweight.cc containing the implementation of the
-          TfIdfWeight class.
-        
-        * include/xapian/weight.h: Added TfIdfWeight class for the tf-idf
-          weighting scheme.
+	* weight/: Added tfidfweight.cc containing the implementation of the
+	  TfIdfWeight class.
 
-        * tests/api_weight.cc: Added tests for TfIdfWeight.
-  
-        * tests/api_nodb.cc : Added simple tests for TfIdfWeight.  
+	* include/xapian/weight.h: Added TfIdfWeight class for the tf-idf
+	  weighting scheme.
+
+	* tests/api_weight.cc: Added tests for TfIdfWeight.
+
+	* tests/api_nodb.cc: Added simple tests for TfIdfWeight.
 
 Tue Feb 19 04:17:19 GMT 2013  Olly Betts <olly@survex.com>
 
