@@ -22,6 +22,7 @@
 
 #include "xapian/weight.h"
 #include <cmath>
+#include <cstring>
 
 #include "debuglog.h"
 #include "omassert.h"
@@ -31,6 +32,19 @@
 using namespace std;
 
 namespace Xapian {
+
+TfIdfWeight::TfIdfWeight(const std::string &normals)
+    : normalizations(normals)
+{
+    if (normalizations.length() != 3 || (! strchr("NBSL", normalizations[0])) || (! strchr("NTP", normalizations[1])) || (! strchr("N", normalizations[2])))
+	throw Xapian::InvalidArgumentError("Normalization string is invalid");
+    if (normalizations[1] != 'N') {
+	need_stat(TERMFREQ);
+	need_stat(COLLECTION_SIZE);
+    }
+    need_stat(WDF);
+    need_stat(WDF_MAX);
+}
 
 TfIdfWeight *
 TfIdfWeight::clone() const

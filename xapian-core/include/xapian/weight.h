@@ -23,11 +23,9 @@
 #define XAPIAN_INCLUDED_WEIGHT_H
 
 #include <string>
-#include <cstring>
 
 #include <xapian/types.h>
 #include <xapian/visibility.h>
-#include <xapian/error.h>
 
 namespace Xapian {
 
@@ -414,18 +412,7 @@ class XAPIAN_VISIBILITY_DEFAULT TfIdfWeight : public Weight {
      *                         The default string is "NTN".
      */
 
-    explicit TfIdfWeight(const std::string &normals)
-       	: normalizations(normals)
-    {
-       	if (normalizations.length() != 3 || (! strchr("NBSL", normalizations[0])) || (! strchr("NTP", normalizations[1])) || (! strchr("N", normalizations[2])))
-            throw Xapian::InvalidArgumentError("Normalization string is invalid");
-        if (normalizations[1] != 'N') {
-            need_stat(TERMFREQ);
-            need_stat(COLLECTION_SIZE);
-        }
-        need_stat(WDF);
-        need_stat(WDF_MAX);
-    }
+    explicit TfIdfWeight(const std::string &normals);
 
     TfIdfWeight()
     : normalizations("NTN")
