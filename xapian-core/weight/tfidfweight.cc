@@ -75,7 +75,7 @@ TfIdfWeight::unserialise(const string & s) const
 {
     if (s.length() != 3)
         throw Xapian::SerialisationError("Extra data in TfIdfWeight::unserialise()");
-    else return new TfIdfWeight(s);
+    return new TfIdfWeight(s);
 }
 
 double
@@ -118,12 +118,12 @@ TfIdfWeight::get_wdfn(Xapian::termcount wdf, char c) const
             return wdf;
         case 'B':
             if (wdf == 0) return 0;
-            else return 1.0;
+            return 1.0;
         case 'S':
             return (wdf * wdf);
         case 'L':
             if (wdf == 0) return 0;
-            else return (1 + log(wdf));
+            return (1 + log(wdf));
         default:
             return wdf;
     }
@@ -141,7 +141,7 @@ TfIdfWeight::get_idfn(Xapian::doccount termfreq, char c) const
             return (log(N / termfreq));
         case 'P':
             if (N == termfreq) return 0; // All documents are indexed by the term
-            else return log((N - termfreq) / termfreq);
+            return log((N - termfreq) / termfreq);
         default:
             return (log(N / termfreq));
     }
