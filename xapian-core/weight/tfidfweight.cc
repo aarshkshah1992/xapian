@@ -22,6 +22,7 @@
 
 #include "xapian/weight.h"
 #include <cmath>
+#include <cstring>
 
 #include "debuglog.h"
 #include "omassert.h"
@@ -31,6 +32,19 @@
 using namespace std;
 
 namespace Xapian {
+
+TfIdfWeight::TfIdfWeight(const std::string &normals)
+    : normalizations(normals)
+{
+    if (normalizations.length() != 3 || (! strchr("NBSL", normalizations[0])) || (! strchr("NTP", normalizations[1])) || (! strchr("N", normalizations[2])))
+	throw Xapian::InvalidArgumentError("Normalization string is invalid");
+    if (normalizations[1] != 'N') {
+	need_stat(TERMFREQ);
+	need_stat(COLLECTION_SIZE);
+    }
+    need_stat(WDF);
+    need_stat(WDF_MAX);
+}
 
 TfIdfWeight *
 TfIdfWeight::clone() const
@@ -60,8 +74,8 @@ TfIdfWeight *
 TfIdfWeight::unserialise(const string & s) const
 {
     if (s.length() != 3)
-        throw Xapian::SerialisationError("Extra data in TfIdfWeight::unserialise()");
-    else return new TfIdfWeight(s);
+	throw Xapian::SerialisationError("Extra data in TfIdfWeight::unserialise()");
+    return new TfIdfWeight(s);
 }
 
 double
@@ -100,18 +114,18 @@ double
 TfIdfWeight::get_wdfn(Xapian::termcount wdf, char c) const
 {
     switch (c) {
-        case 'N':
-            return wdf;
-        case 'B':
-            if (wdf == 0) return 0;
-            else return 1.0;
-        case 'S':
-            return (wdf * wdf);
-        case 'L':
-            if (wdf == 0) return 0;
-            else return (1 + log(wdf));
-        default:
-            return wdf;
+	case 'N':
+	    return wdf;
+	case 'B':
+	    if (wdf == 0) return 0;
+	    return 1.0;
+	case 'S':
+	    return (wdf * wdf);
+	case 'L':
+	    if (wdf == 0) return 0;
+	    return (1 + log(wdf));
+	default:
+	    return wdf;
     }
 }
 
@@ -121,15 +135,15 @@ TfIdfWeight::get_idfn(Xapian::doccount termfreq, char c) const
     double N = 1.0;
     if (c != 'N') N = get_collection_size();
     switch (c) {
-        case 'N':
-            return 1.0;
-        case 'T':
-            return (log(N / termfreq));
-        case 'P':
-            if (N == termfreq) return 0; // All documents are indexed by the term
-            else return log((N - termfreq) / termfreq);
-        default:
-            return (log(N / termfreq));
+	case 'N':
+	    return 1.0;
+	case 'T':
+	    return (log(N / termfreq));
+	case 'P':
+	    if (N == termfreq) return 0; // All documents are indexed by the term
+	    return log((N - termfreq) / termfreq);
+	default:
+	    return (log(N / termfreq));
     }
 }
 
@@ -139,10 +153,10 @@ TfIdfWeight::get_wtn(double wt, char c) const
 /* Include future implementations of weight normalizations in the switch
    construct */
     switch (c) {
-        case 'N':
-            return wt;
-        default:
-            return wt;
+	case 'N':
+	    return wt;
+	default:
+	    return wt;
     }
 }
 

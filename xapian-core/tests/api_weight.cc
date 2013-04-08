@@ -96,19 +96,11 @@ DEFINE_TESTCASE(bm25weight4, backend) {
 // Test for various cases of normalization string.
 DEFINE_TESTCASE(tfidfweight1, !backend) {
     // InvalidArgumentError should be thrown if normalization string is invalid
-    try {
-        Xapian::TfIdfWeight b("JOHN_LENNON");
-        FAIL_TEST("Xapian::InvalidArgumentError not thrown for invalid normalization string");
-    } catch (const Xapian::InvalidArgumentError &x) {
-        // Good!
-    }
+    TEST_EXCEPTION(Xapian::InvalidArgumentError,
+	Xapian::TfIdfWeight b("JOHN_LENNON"));
 
-    try {
-        Xapian::TfIdfWeight c("LOL");
-        FAIL_TEST("Xapian::InvalidArgumentError not thrown for invalid normalization string");
-    } catch (const Xapian::InvalidArgumentError &x) {
-        // Good!
-    }
+    TEST_EXCEPTION(Xapian::InvalidArgumentError,
+	Xapian::TfIdfWeight b("LOL"));
 
     /* Normalization string should be set to "NTN" by constructor if none is
       given. */
@@ -149,7 +141,7 @@ DEFINE_TESTCASE(tfidfweight3, backend) {
     TEST_EQUAL(mset.size(), 2);
     // doc 2 should have higher weight than 4 as only tf(wdf) will dominate.
     mset_expect_order(mset, 2, 4);
-    TEST_EQUAL_DOUBLE(mset[0].get_weight(), (8*log(6/2)));
+    TEST_EQUAL_DOUBLE(mset[0].get_weight(), (8 * log(6 / 2)));
 
     // Check for "BNN" and for both branches of 'B'.
     enquire.set_query(Xapian::Query("test"));
@@ -165,7 +157,7 @@ DEFINE_TESTCASE(tfidfweight3, backend) {
     mset = enquire.get_mset(0, 10);
     TEST_EQUAL(mset.size(), 2);
     mset_expect_order(mset, 2, 4);
-    TEST_EQUAL_DOUBLE(mset[0].get_weight(), (1+log(8))); // idfn=1 and so wt=tfn=1+log(tf)
+    TEST_EQUAL_DOUBLE(mset[0].get_weight(), (1 + log(8))); // idfn=1 and so wt=tfn=1+log(tf)
     TEST_EQUAL_DOUBLE(mset[1].get_weight(), 1.0);         // idfn=1 and wt=tfn=1+log(tf)=1+log(1)=1
 
     // Check for "SNN"
@@ -173,7 +165,7 @@ DEFINE_TESTCASE(tfidfweight3, backend) {
     enquire.set_weighting_scheme(Xapian::TfIdfWeight("SNN")); // idf=1 and tfn=tf*tf
     mset = enquire.get_mset(0, 10);
     TEST_EQUAL(mset.size(), 5);
-    mset_expect_order(mset,2,1,4,3,5);
+    mset_expect_order(mset, 2, 1, 4, 3, 5);
     TEST_EQUAL_DOUBLE(mset[0].get_weight(), 9.0);
     TEST_EQUAL_DOUBLE(mset[4].get_weight(), 1.0);
 
@@ -182,9 +174,9 @@ DEFINE_TESTCASE(tfidfweight3, backend) {
     enquire.set_weighting_scheme(Xapian::TfIdfWeight("NTN"));
     mset = enquire.get_mset(0, 10);
     TEST_EQUAL(mset.size(), 6);
-    mset_expect_order(mset,1,2,3,4,5,6);
-    for (int i=0; i<6;++i) {
-         TEST_EQUAL_DOUBLE(mset[i].get_weight(), 0.0);
+    mset_expect_order(mset, 1, 2, 3, 4, 5, 6);
+    for (int i = 0; i < 6; ++i) {
+	 TEST_EQUAL_DOUBLE(mset[i].get_weight(), 0.0);
     }
 
     // Check for "NPN" and for both branches of 'P'
@@ -192,18 +184,18 @@ DEFINE_TESTCASE(tfidfweight3, backend) {
     enquire.set_weighting_scheme(Xapian::TfIdfWeight("NPN"));
     mset = enquire.get_mset(0, 10);
     TEST_EQUAL(mset.size(), 6);
-    mset_expect_order(mset,1,2,3,4,5,6);
-    for (int i=0; i<6;++i) {
-         TEST_EQUAL_DOUBLE(mset[i].get_weight(), 0.0);
+    mset_expect_order(mset, 1, 2, 3, 4, 5, 6);
+    for (int i = 0; i < 6; ++i) {
+	 TEST_EQUAL_DOUBLE(mset[i].get_weight(), 0.0);
     }
 
     enquire.set_query(Xapian::Query("word"));
     enquire.set_weighting_scheme(Xapian::TfIdfWeight("NPN"));
     mset = enquire.get_mset(0, 10);
     TEST_EQUAL(mset.size(), 2);
-    mset_expect_order(mset,2,4);
-    TEST_EQUAL_DOUBLE(mset[0].get_weight(), 8*log((6-2)/2));
-    TEST_EQUAL_DOUBLE(mset[1].get_weight(), 1*log((6-2)/2));
+    mset_expect_order(mset, 2, 4);
+    TEST_EQUAL_DOUBLE(mset[0].get_weight(), 8 * log((6 - 2) / 2));
+    TEST_EQUAL_DOUBLE(mset[1].get_weight(), 1 * log((6 - 2) / 2));
 
     return true;
 }
