@@ -23,11 +23,9 @@
 #define XAPIAN_INCLUDED_WEIGHT_H
 
 #include <string>
-#include <cstring>
 
 #include <xapian/types.h>
 #include <xapian/visibility.h>
-#include <xapian/error.h>
 
 namespace Xapian {
 
@@ -360,7 +358,7 @@ class XAPIAN_VISIBILITY_DEFAULT TfIdfWeight : public Weight {
     void init(double factor);
 
     /* When additional normalizations are implemented in the future, the additional statistics for them
-       should be accesed by these functions. */
+       should be accessed by these functions. */
     double get_wdfn(Xapian::termcount wdf, char c) const;
     double get_idfn(Xapian::doccount termfreq, char c) const;
     double get_wtn(double wt, char c) const;
@@ -381,7 +379,7 @@ class XAPIAN_VISIBILITY_DEFAULT TfIdfWeight : public Weight {
      *                         'S':Square     wdfn=wdf*wdf
      *                         'L':Logarithmic wdfn=1+log<sub>e</sub>(wdf)
      *
-     *                         The Max-wdf and Augmented Max wdf normalization aren't yet implemented.
+     *                         The Max-wdf and Augmented Max wdf normalizations aren't yet implemented.
      *
      *
      *                         The second character indicates the normalization
@@ -396,11 +394,11 @@ class XAPIAN_VISIBILITY_DEFAULT TfIdfWeight : public Weight {
      *
      *
      *                         The third and the final character indicates the
-     *                         normalizaton for the document weight of which
+     *                         normalization for the document weight of which
      *                         the following are currently available:
      *
      *                         'N':None wtn=tfn*idfn
-     *                         Implementing more normalizaions for the weight requires access to
+     *                         Implementing more normalizations for the weight requires access to
      *                         statistics such as the weight of all terms in the document indexed by
      *                         the term in the query. This is not available from the current backend.
      *
@@ -414,26 +412,15 @@ class XAPIAN_VISIBILITY_DEFAULT TfIdfWeight : public Weight {
      *                         The default string is "NTN".
      */
 
-    explicit TfIdfWeight(const std::string &normals)
-       	: normalizations(normals)
-    {
-       	if (normalizations.length() != 3 || (! strchr("NBSL", normalizations[0])) || (! strchr("NTP", normalizations[1])) || (! strchr("N", normalizations[2])))
-            throw Xapian::InvalidArgumentError("Normalization string is invalid");
-        if (normalizations[1] != 'N') {
-            need_stat(TERMFREQ);
-            need_stat(COLLECTION_SIZE);
-        }
-        need_stat(WDF);
-        need_stat(WDF_MAX);
-    }
+    explicit TfIdfWeight(const std::string &normalizations);
 
     TfIdfWeight()
     : normalizations("NTN")
     {
-        need_stat(TERMFREQ);
-        need_stat(WDF);
-        need_stat(WDF_MAX);
-        need_stat(COLLECTION_SIZE);
+	need_stat(TERMFREQ);
+	need_stat(WDF);
+	need_stat(WDF_MAX);
+	need_stat(COLLECTION_SIZE);
     }
 
     std::string name() const;
@@ -442,7 +429,7 @@ class XAPIAN_VISIBILITY_DEFAULT TfIdfWeight : public Weight {
     TfIdfWeight * unserialise(const std::string & s) const;
 
     double get_sumpart(Xapian::termcount wdf,
-                       Xapian::termcount doclen) const;
+		       Xapian::termcount doclen) const;
     double get_maxpart() const;
 
     double get_sumextra(Xapian::termcount doclen) const;
