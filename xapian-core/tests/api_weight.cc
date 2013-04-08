@@ -176,7 +176,7 @@ DEFINE_TESTCASE(tfidfweight3, backend) {
     TEST_EQUAL(mset.size(), 6);
     mset_expect_order(mset, 1, 2, 3, 4, 5, 6);
     for (int i = 0; i < 6; ++i) {
-         TEST_EQUAL_DOUBLE(mset[i].get_weight(), 0.0);
+	 TEST_EQUAL_DOUBLE(mset[i].get_weight(), 0.0);
     }
 
     // Check for "NPN" and for both branches of 'P'
@@ -186,7 +186,7 @@ DEFINE_TESTCASE(tfidfweight3, backend) {
     TEST_EQUAL(mset.size(), 6);
     mset_expect_order(mset, 1, 2, 3, 4, 5, 6);
     for (int i = 0; i < 6; ++i) {
-         TEST_EQUAL_DOUBLE(mset[i].get_weight(), 0.0);
+	 TEST_EQUAL_DOUBLE(mset[i].get_weight(), 0.0);
     }
 
     enquire.set_query(Xapian::Query("word"));

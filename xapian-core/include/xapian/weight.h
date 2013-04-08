@@ -417,10 +417,10 @@ class XAPIAN_VISIBILITY_DEFAULT TfIdfWeight : public Weight {
     TfIdfWeight()
     : normalizations("NTN")
     {
-        need_stat(TERMFREQ);
-        need_stat(WDF);
-        need_stat(WDF_MAX);
-        need_stat(COLLECTION_SIZE);
+	need_stat(TERMFREQ);
+	need_stat(WDF);
+	need_stat(WDF_MAX);
+	need_stat(COLLECTION_SIZE);
     }
 
     std::string name() const;
@@ -429,7 +429,7 @@ class XAPIAN_VISIBILITY_DEFAULT TfIdfWeight : public Weight {
     TfIdfWeight * unserialise(const std::string & s) const;
 
     double get_sumpart(Xapian::termcount wdf,
-                       Xapian::termcount doclen) const;
+		       Xapian::termcount doclen) const;
     double get_maxpart() const;
 
     double get_sumextra(Xapian::termcount doclen) const;
