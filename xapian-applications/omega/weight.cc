@@ -81,6 +81,20 @@ set_weighting_scheme(Xapian::Enquire & enq, const map<string, string> & opt,
 	    }
 	}
 
+	if (startswith(scheme, "tfidf")) {
+	    const char *p = scheme.c_str() + 5;
+	    if (*p == '\0') {
+		enq.set_weighting_scheme(Xapian::TfIdfWeight("NTN"));
+		return;
+	    }
+	    else if (C_isspace((unsigned char)*p)) {
+		p++; //Move one ahead to the parameter
+		string word = p;
+		enq.set_weighting_scheme(Xapian::TfIdfWeight(p));
+		return;
+	    }
+	}
+
 	if (scheme != "bool") {
 	    throw "Unknown $opt{weighting} setting: " + scheme;
 	}
