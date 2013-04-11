@@ -395,7 +395,7 @@ $set{OPT,VALUE}
           parameters to use if the weighting scheme supports them.  The syntax
           is a string consisting of the scheme name followed by any parameters,
           all separated by whitespace.  Any parameters not specified will use
-          their default values.  Valid scheme names are ``bm25``, ``bool``, and
+          their default values.  Valid scheme names are ``bm25``, ``bool``, ``tfidf`` and
           ``trad``.  e.g. ``$set{weighting,bm25 1 0.8}``
 
 	Omega 1.2.5 and later support the following options can be set to a
