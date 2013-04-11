@@ -288,4 +288,96 @@ Registry::get_lat_long_metric(const string & name) const
     RETURN(lookup_object(internal->lat_long_metrics, name));
 }
 
+<<<<<<< HEAD
+=======
+Registry::Internal::Internal()
+	: Xapian::Internal::intrusive_base(),
+          wtschemes(),
+	  postingsources(),
+	  lat_long_metrics()
+{
+    add_defaults();
+}
+
+Registry::Internal::~Internal()
+{
+    clear_weighting_schemes();
+    clear_posting_sources();
+    clear_match_spies();
+    clear_lat_long_metrics();
+}
+
+void
+Registry::Internal::add_defaults()
+{
+    Xapian::Weight * weighting_scheme;
+    weighting_scheme = new Xapian::BM25Weight;
+    wtschemes[weighting_scheme->name()] = weighting_scheme;
+    weighting_scheme = new Xapian::BoolWeight;
+    wtschemes[weighting_scheme->name()] = weighting_scheme;
+    weighting_scheme = new Xapian::TradWeight;
+    wtschemes[weighting_scheme->name()] = weighting_scheme;
+    weighting_scheme = new Xapian::TfIdfWeight;
+    wtschemes[weighting_scheme->name()] = weighting_scheme;
+
+    Xapian::PostingSource * source;
+    source = new Xapian::ValueWeightPostingSource(0);
+    postingsources[source->name()] = source;
+    source = new Xapian::DecreasingValueWeightPostingSource(0);
+    postingsources[source->name()] = source;
+    source = new Xapian::ValueMapPostingSource(0);
+    postingsources[source->name()] = source;
+    source = new Xapian::FixedWeightPostingSource(0.0);
+    postingsources[source->name()] = source;
+    source = new Xapian::LatLongDistancePostingSource(0,
+	Xapian::LatLongCoords(),
+	Xapian::GreatCircleMetric());
+    postingsources[source->name()] = source;
+
+    Xapian::MatchSpy * spy;
+    spy = new Xapian::ValueCountMatchSpy();
+    matchspies[spy->name()] = spy;
+
+    Xapian::LatLongMetric * metric;
+    metric = new Xapian::GreatCircleMetric();
+    lat_long_metrics[metric->name()] = metric;
+}
+
+void
+Registry::Internal::clear_weighting_schemes()
+{
+    map<string, Xapian::Weight*>::const_iterator i;
+    for (i = wtschemes.begin(); i != wtschemes.end(); ++i) {
+	delete i->second;
+    }
+}
+
+void
+Registry::Internal::clear_posting_sources()
+{
+    map<string, Xapian::PostingSource *>::const_iterator i;
+    for (i = postingsources.begin(); i != postingsources.end(); ++i) {
+	delete i->second;
+    }
+}
+
+void
+Registry::Internal::clear_match_spies()
+{
+    map<string, Xapian::MatchSpy *>::const_iterator i;
+    for (i = matchspies.begin(); i != matchspies.end(); ++i) {
+	delete i->second;
+    }
+}
+
+void
+Registry::Internal::clear_lat_long_metrics()
+{
+    map<string, Xapian::LatLongMetric *>::const_iterator i;
+    for (i = lat_long_metrics.begin(); i != lat_long_metrics.end(); ++i) {
+	delete i->second;
+    }
+}
+
+>>>>>>> tfidf
 }

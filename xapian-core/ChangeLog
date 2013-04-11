@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Thu Mar 21 23:55:26 GMT 2013  Olly Betts <olly@survex.com>
 
 	* tests/queryparsertest.cc: Add test coverage for change to
@@ -74,6 +75,19 @@ Wed Mar 06 08:55:12 GMT 2013  Olly Betts <olly@survex.com>
 
 	* HACKING: gs package has been replaced by ghostscript package in
 	  current Debian and Ubuntu releases.
+=======
+Sun Mar 3 8:37 AM GMT 2013 Aarsh Shah <aarshkshah1992@gmail.com>
+
+        * weight/: Added tfidfweight.cc containing the implementation of the
+          TfIdfWeight class.
+        
+        * include/xapian/weight.h: Added TfIdfWeight class for the tf-idf
+          weighting scheme.
+
+        * tests/api_weight.cc: Added tests for TfIdfWeight.
+  
+        * tests/api_nodb.cc : Added simple tests for TfIdfWeight.  
+>>>>>>> tfidf
 
 Tue Feb 19 04:17:19 GMT 2013  Olly Betts <olly@survex.com>
 
