@@ -54,20 +54,24 @@ set_weighting_scheme(Xapian::Enquire & enq, const map<string, string> & opt,
 
 	if (startswith(scheme, "bm25")) {
 	    const char *p = scheme.c_str() + 4;
-	    if (*p == '\0' || C_isspace((unsigned char)*p)) {
-		double k1 = 1;
-		double k2 = 0;
-		double k3 = 1;
-		double b = 0.5;
-		double min_normlen = 0.5;
-		(void)(double_param(&p, &k1) &&
-		    double_param(&p, &k2) &&
-		    double_param(&p, &k3) &&
-		    double_param(&p, &b) &&
-		    double_param(&p, &min_normlen));
-		Xapian::BM25Weight wt(k1, k2, k3, b, min_normlen);
-		enq.set_weighting_scheme(wt);
-		return;
+	    if (*p == '\0') {
+	        enq.set_weighting_scheme(Xapian::BM25Weight());
+	        return;
+	    }    
+	    if (C_isspace((unsigned char)*p)) {
+		    double k1 = 1;
+		    double k2 = 0;
+		    double k3 = 1;
+		    double b = 0.5;
+		    double min_normlen = 0.5;
+		    if (!double_param(&p, &k1)) throw "Parameter k1 is invalid";  
+		    if (!double_param(&p, &k2)) throw "Parameter k2 is invalid";  
+		    if (!double_param(&p, &k3)) throw "Parameter k3 is invalid";   
+		    if (!double_param(&p, &b)) throw "Parameter b is invalid";    
+		    if (!double_param(&p, &min_normlen)) throw "Parameter min_normlen is invalid";		    
+		    Xapian::BM25Weight wt(k1, k2, k3, b, min_normlen);
+		    enq.set_weighting_scheme(wt);
+		    return;
 	    }
 	}
 
