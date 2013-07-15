@@ -104,14 +104,14 @@ DPHWeight::get_sumpart(Xapian::termcount wdf, Xapian::termcount len) const
 
     double normalization = pow((1 - wdf_to_len), 2) / (wdf + 1);
 
-    double weight = normalization *
-                    (wdf *
-                    log2((wdf * get_average_length() / len) *
-                    (N / F)) +
-                    (0.5 * log2(2 * M_PI * wdf * (1 - wdf_to_len))));
+    double wt = normalization *
+                (wdf *
+                log2((wdf * get_average_length() / len) *
+                (N / F)) +
+                (0.5 * log2(2 * M_PI * wdf * (1 - wdf_to_len))));
 
     // Subtract the lower bound from the actual weight to avoid negative weights.
-    return ((get_wqf() * weight) - lower_bound) * factor;
+    return ((get_wqf() * wt) - lower_bound) * factor;
 }
 
 double
