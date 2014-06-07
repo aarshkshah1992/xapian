@@ -1048,6 +1048,10 @@ class XAPIAN_VISIBILITY_DEFAULT DPHWeight : public Weight {
     /// The factor with which to multiply the weight.
     double factor;
 
+   /// The constant loagrithmic values used in the weighting formulae.
+   double log_constants;
+   double log_2pi;
+
     DPHWeight * clone() const;
 
     void init(double factor);

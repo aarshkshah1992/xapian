@@ -37,6 +37,7 @@ void
 DPHWeight::init(double factor_)
 {
     factor = factor_;
+    log_2pi = log2(2 * M_PI);
 
     double F(get_collection_freq());
     double N(get_collection_size());
@@ -47,8 +48,10 @@ DPHWeight::init(double factor_)
     double len_lower(get_doclength_lower_bound());
 
     double min_wdf_to_len = wdf_lower / len_upper;
-    double max_normalization = pow((1.0 - min_wdf_to_len), 2) / (wdf_lower + 1.0);
     double min_normalization = pow(1.0 / len_upper, 2) / (wdf_upper + 1.0);
+
+    /* Calcuatle logarithm which will be used in weighting calculations */
+    log_constants = log2(get_average_length() * N / F);
 
     /* Cacluate lower bound on the weight in order to deal with negative
      * weights. */
@@ -66,8 +69,10 @@ DPHWeight::init(double factor_)
         return;
     }
 
-    double max_weight = max_normalization *
-                        (wdf_upper *
+    double max_wdf_normalization_product = ((wdf_upper - len_lower) * (wdf_upper- len_lower)) /
+                                           (len_lower * len_lower * (1.0 + (1.0 / wdf_upper)));
+
+    double max_weight = (max_wdf_normalization_product *
                         log2((wdf_upper * get_average_length() / len_lower) *
                         (N / F)) +
                         (0.5 * log2(2 * M_PI * wdf_upper * (1 - min_wdf_to_len))));
@@ -98,17 +103,14 @@ DPHWeight::get_sumpart(Xapian::termcount wdf, Xapian::termcount len) const
 {
     if (wdf == 0) return 0.0;
 
-    double F(get_collection_freq());
-    double N(get_collection_size());
     double wdf_to_len = double(wdf) / len;
 
     double normalization = pow((1 - wdf_to_len), 2) / (wdf + 1);
 
     double wt = normalization *
 		(wdf *
-		log2((wdf * get_average_length() / len) *
-		(N / F)) +
-		(0.5 * log2(2 * M_PI * wdf * (1 - wdf_to_len))));
+		(log_constants + log2(wdf_to_len)) +
+		(0.5 * (log_2pi +  log2(wdf * (1 - wdf_to_len)))));
 
     // Subtract the lower bound from the actual weight to avoid negative weights.
     return ((get_wqf() * wt) - lower_bound) * factor;
