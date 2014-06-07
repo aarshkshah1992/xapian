@@ -63,25 +63,20 @@ IneB2Weight::init(double factor_)
 	return;
     }
 
-    double wdfn_lower(1.0);
-
-    wdfn_lower *= log2(1 + (param_c * get_average_length()) /
-		    get_doclength_upper_bound());
-
     wdfn_upper *= log2(1 + (param_c * get_average_length()) /
 		    get_doclength_lower_bound());
 
     double N(get_collection_size());
     double F(get_collection_freq());
 
-    double B_max = (F + 1.0) / (get_termfreq() * (wdfn_lower + 1.0));
+    double max_wdfn_product_B = (F + 1.0) / (get_termfreq() * (1.0 + (1.0 / wdfn_upper)));
     double mean = F / N;
 
     double expected_max = N * (1.0 - exp( - mean));
 
     double idf_max = log2((N + 1.0) / (expected_max + 0.5));
 
-    upper_bound = wdfn_upper * idf_max * get_wqf() * B_max;
+    upper_bound = max_wdfn_product_B * idf_max * get_wqf();
 }
 
 string
@@ -118,14 +113,14 @@ IneB2Weight::get_sumpart(Xapian::termcount wdf, Xapian::termcount len) const
     double N(get_collection_size());
     double F(get_collection_freq());
 
-    double B = (F + 1.0) / (get_termfreq() * (wdfn + 1.0));
+    double wdfn_product_B = (F + 1.0) / (get_termfreq() * (1.0 + (1.0 / wdfn)));
     double mean = F / N;
 
     double expected = N * (1.0 - exp( - mean));
 
     double idf = log2((N + 1.0) / (expected + 0.5));
 
-    return (wdfn * idf * get_wqf() * B * factor);
+    return (wdfn_product_B * idf * get_wqf() *  factor);
 }
 
 double
